@@ -11,7 +11,7 @@
 |
 */
 
-$app = new Thl\Foundation\Application(
+$app = new Mods\Foundation\Application(
     realpath(__DIR__.'/../')
 );
 
@@ -28,17 +28,17 @@ $app = new Thl\Foundation\Application(
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    Thl\Foundation\Http\Kernel::class
+    Mods\Foundation\Http\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    Thl\Foundation\Console\Kernel::class
+    Mods\Foundation\Console\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    Thl\Foundation\Exceptions\Handler::class
+    Mods\Foundation\Exceptions\Handler::class
 );
 
 /*
