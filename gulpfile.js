@@ -1,5 +1,5 @@
-var config = require('./dev/gulp/config');
+var config = require('./build/config');
 require('gulp-task-loader')({
-	dir:'./dev/gulp/task',
+	dir:'./build/gulp/task',
 	config:config
 });
