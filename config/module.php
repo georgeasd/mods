@@ -20,7 +20,7 @@ return [
     */
 
     'modules' => [
-        'thl_theme' => true,
-        'thl_view' => true,
+        'mod_theme' => true,
+        'mod_view' => true,
     ],
 ];
