@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<update handle="1column"/>
+	<referenceContainer name="columns">
+        <container name="div.sidebar.left" htmlTag="div" htmlClass="sidebar sidebar-left" before="main">
+            <container name="sidebar.left" as="sidebar_left" label="Sidebar Left"/>
+        </container>
+    </referenceContainer>
+</layout>
