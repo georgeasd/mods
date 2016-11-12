@@ -5,6 +5,16 @@ return  [
 		'css',
 		'js',
 	],
+	'compliers' => [
+		'js' => [
+			Mods\Theme\Compiler\Script\Minifier::class,
+			Mods\Theme\Compiler\Script\Move::class
+		],
+		'css' => [
+			Mods\Theme\Compiler\Style\Minifier::class,
+			Mods\Theme\Compiler\Style\Move::class
+		],
+	],
 	'frontend' => [
 		'active' => env('DEFAULT_FRONT_THEME','default_theme'),
 	],
