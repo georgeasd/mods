@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default_theme' => [
+    'default' => [
         'name' => 'Default',
         'type' => 'theme',
         'area' => 'frontend',

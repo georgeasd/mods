@@ -18,6 +18,6 @@ return  [
 		],
 	],
 	'frontend' => [
-		'active' => env('DEFAULT_FRONT_THEME','default_theme'),
+		'active' => env('DEFAULT_FRONT_THEME','default'),
 	],
 ];
