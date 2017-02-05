@@ -1,4 +1,5 @@
-var webpack = require('webpack');
+var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -8,10 +9,10 @@ module.exports = {
     filename: '[name].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.css$/,
-        loaders: ['style', 'css']
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
       }
     ]
   },
@@ -22,6 +23,9 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('common')
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor' // Specify the common bundle's name.
+    }),
+    new ExtractTextPlugin("[name].css")
   ]
 };

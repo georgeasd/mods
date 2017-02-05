@@ -1,17 +1,19 @@
 var ora = require('ora'),
-    run = require('./theme').run;
+    run = require('./theme').run,
+    PrettyError = require('pretty-error'),
+    pe = new PrettyError();
 
-var spinner = ora('building for production...')
+var spinner = ora({
+  text: 'building for production...',
+  spinner: 'bouncingBar'
+})
 spinner.start()
 
-run(function (err, stats) {
-  spinner.stop()
-  if (err) throw err
-  process.stdout.write(stats.toString({
-    colors: true,
-    modules: false,
-    children: false,
-    chunks: false,
-    chunkModules: false
-  }) + '\n')
+run().then(function(){
+  spinner.succeed()
 })
+.catch(function(error){
+  spinner.fail()
+  var renderedError = pe.render(error)
+  console.log(renderedError)
+});
