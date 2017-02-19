@@ -6,5 +6,4 @@ use Mods\View\Block;
 
 class Home extends Block
 {
-	
 }

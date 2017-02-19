@@ -3,7 +3,7 @@
     <head>
        	<title>Home</title>
        	<css src="home/home.css" />
-        <script src="home/moment.js" />
+        <script src="home/typed.js" />
        	<script src="home/home.js" />
     </head>
     <body>
