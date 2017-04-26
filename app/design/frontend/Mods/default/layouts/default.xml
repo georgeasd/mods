@@ -4,6 +4,7 @@
        	<meta name="charset" content="utf-8"/>
 		<meta name="x-ua-compatible" content="ie=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<scss src="theme.scss" />
 		<script src="jquery.js" />
     </head>
     <body>

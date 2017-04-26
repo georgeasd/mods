@@ -23,5 +23,6 @@ return [
         'mod_theme' => true,
         'mod_view' => true,
         'mod_home' => true,
+        'mod_scss' => true,
     ],
 ];

@@ -2,6 +2,7 @@
 
 return  [
 	'asset' => [
+        'scss',
         'css',
         'js',
         'img',
@@ -13,6 +14,7 @@ return  [
             Mods\Theme\Compiler\Script\Move::class
         ],
         'css' => [
+            Mods\Scss\Compiler\Scss::class,
             Mods\Theme\Compiler\Style\Minifier::class,
             Mods\Theme\Compiler\Style\Bundle::class,
             Mods\Theme\Compiler\Style\Move::class
