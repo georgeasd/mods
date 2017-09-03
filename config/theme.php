@@ -6,6 +6,7 @@ return  [
         'css',
         'js',
         'img',
+        'fonts'
     ],
     'compliers' => [
         'js' => [
@@ -20,7 +21,10 @@ return  [
             Mods\Theme\Compiler\Style\Move::class
         ],
         'img' => [
-            Mods\Theme\Compiler\File\Move::class
+            Mods\Theme\Compiler\Img\Move::class
+        ],
+        'fonts' => [
+            Mods\Theme\Compiler\Font\Move::class
         ],
     ],
 	'frontend' => [
