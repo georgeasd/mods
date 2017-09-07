@@ -12,7 +12,7 @@ Mods is a web application framework with focus on simplicity, modularity, powerf
 
 Mods is based on [Laravel](https://laravel.com/) by Taylor Otwell.
 
-- **Laravel**: 5.3.*
+- **Laravel**: 5.4.*
 - **PHP**: 5.6+ and 7
 - **Author**: Sunel (sunelbe@gmail.com)
 
