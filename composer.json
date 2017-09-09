@@ -5,8 +5,10 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4",
         "mods/framework": "0.0.*@alpha",
+        "php": ">=7.0.0",
+        "fideloper/proxy": "~3.3",
+        "laravel/tinker": "~1.0",
         "mods/scss-complier":"0.0.1"
     },
     "require-dev": {
