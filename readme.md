@@ -1,4 +1,4 @@
-<p align="center">MODS</p>
+<h1 align="center">MODS</h1>
 
 <p align="center">
 <a href="https://packagist.org/packages/mods/mods"><img src="https://poser.pugx.org/mods/mods/d/total.svg" alt="Total Downloads"></a>
