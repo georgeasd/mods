@@ -7,7 +7,7 @@
     	{!! $head['js'] !!}
     	{!! $head['head_includes'] !!}
     </head>
-    <body>
+    <body {!! $bodyAttributes !!}>
     	{!! $body !!}
     </body>
 </html>

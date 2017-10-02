@@ -60,7 +60,7 @@ function themeCompile(assetConfig, callback) {
 }  	
 
 /**
- * Runs the multiple webpack.
+ * Runs multiple webpack instances.
  * @return {Promise} A Promise that is resolved once all builds have been
  *   created
  */
