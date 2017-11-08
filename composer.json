@@ -23,7 +23,8 @@
         "files": [
         ],
         "classmap": [
-            "database"
+            "database",
+            "resources/generated/classes/"
         ],
         "psr-4": {
         }
@@ -36,6 +37,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
+                "*"
             ]
         }
     },
@@ -47,8 +49,7 @@
             "@php artisan key:generate"
         ],
         "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
         ]
     },
     "config": {
