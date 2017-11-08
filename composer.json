@@ -24,7 +24,7 @@
         ],
         "classmap": [
             "database",
-            "resources/generated/classes/"
+            "resources/generated/"
         ],
         "psr-4": {
         }
