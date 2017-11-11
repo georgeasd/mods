@@ -1,5 +1,7 @@
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const webpack = require('webpack')
+const config = require('./index')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -25,16 +27,23 @@ module.exports = {
                 // use style-loader in development
                 fallback: "style-loader"
             })
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        loader: "file-loader",
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
       }
     ]
   },
   resolve: {
     alias: {
-      theme: ""
+      themePath: config.build.resourcePath
     }
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin(),
+    new UglifyJSPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor' // Specify the common bundle's name.
     }),
