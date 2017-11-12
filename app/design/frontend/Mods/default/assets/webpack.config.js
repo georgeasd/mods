@@ -3,7 +3,14 @@ const webpack = require('webpack')
 module.exports = {
   	resolve: {
 	    alias: {
-	        jquery: "themePath/frontend/default/js/jquery"
+	        jquery: "themePath/js/jquery"
 	    }
-	}
+	},
+	plugins: [
+		new webpack.ProvidePlugin({
+		    $: "jquery",
+		    jQuery: "jquery",
+		    "window.jQuery": "jquery"
+		})
+	]
 };

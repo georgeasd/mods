@@ -39,7 +39,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      themePath: config.build.resourcePath
+      themePath: ""
     }
   },
   plugins: [

@@ -6,8 +6,9 @@ var path = require('path'),
 	glob = require("glob"),
 	_ = require('lodash');
 	config = require('../config'),
-	assetpath = config.build.assetConfigPath
-	builderCounter = 0;
+	assetpath = config.build.assetConfigPath,
+	PrettyError = require('pretty-error'),
+    pe = new PrettyError();
 
 function readAssetConfig(assetpath){
 	try {
@@ -19,83 +20,71 @@ function readAssetConfig(assetpath){
 	}
 }
 
-function createWebpackComplier(options, callback) {
-	return webpack(options, function(err, stats) {
-	  if(err){callback(true, error);}		
-	  process.stdout.write(stats.toString({
-	    colors: true,
-	    modules: false,
-	    children: false,
-	    chunks: false,
-	    chunkModules: false
-	  }) + '\n\n')
-	  --builderCounter
-	  if(builderCounter <= 0){
-	  	callback(false);
-	  }
-	})
-}
-
 function genertareWebpackConfig(area, theme, configs, modulePaths) {
 	var baseWebpackConfig = require('../config/webpack.config');
-
 	var found = {};
 
 	modulePaths.forEach(function(item) {	
-		item = item+'/**/webpack.config.js';
+		item = item+'/**/'+area+'/**/webpack.config.js';
 	    glob.sync(item).forEach(function(path) {
 	      found[path] = null;	      
 	    });
 	});
 	found = Object.keys(found);
-
-	found = found.filter(function(item) {
-		return item.indexOf('/'+area+'/') !== -1;
+	
+	found.forEach(function(path) {
+	    baseWebpackConfig = merge.smart(baseWebpackConfig, require(path));
 	});
 
-	found.forEach(function(path){
-	    baseWebpackConfig = merge.smart(baseWebpackConfig,require(path));
-	});
-
-
+	baseWebpackConfig.resolve.alias.themePath = config.build.resourcePath+'/'+area+'/'+theme;
 	baseWebpackConfig.entry = configs;
 	baseWebpackConfig.output.path = path.join(config.build.publicPath,area,theme);
 	baseWebpackConfig.output.publicPath = '/assets/'+area+'/'+theme+'/';
-	
+
 	return baseWebpackConfig
 }
 
-function themeCompile(assetConfig, callback) {
+function themeCompile(assetConfig) {
   	const areas = assetConfig.areas;
   	const handles = assetConfig.handles;
   	const modulePaths = assetConfig.modulePaths;
+  	const webpackCompilers = [];
   	_.forOwn(areas, function(themes, area) {
   		_.forOwn(themes, function(assets, theme) {
   			const entries = _.zipObject(handles[area], _.map(handles[area]).map(function(val) {
   				return path.join(config.build.resourcePath,area,theme,'webpack', val+'.js');
   			}));
-  			builderCounter++;
-  			createWebpackComplier(genertareWebpackConfig(area, theme, entries, modulePaths), callback)	
-  		})
-  	})
+  			webpackCompilers.push(webpack(genertareWebpackConfig(area, theme, entries, modulePaths)));
+  		});
+  	});
+
+  	webpackCompilers.forEach(function(compiler) {
+  		compiler.run((err, stats) => {
+
+  		if (err) {
+  			var renderedError = pe.render(err)
+  			console.log(renderedError)
+  			process.exit();
+		    return
+		}
+
+		process.stdout.write(stats.toString({
+		    colors: true,
+		    modules: false,
+		    children: false,
+		    chunks: false,
+		    chunkModules: false
+		  }) + '\n\n')
+		});
+  	});
 }  	
 
 /**
  * Runs multiple webpack instances.
- * @return {Promise} A Promise that is resolved once all builds have been
- *   created
+ * @return void
  */
 function run() {
-	return new Promise(function(resolve, reject) {
-		try {
-			themeCompile(readAssetConfig(assetpath), function (err, error) {
-				if(err) {reject(error)}
-				else {resolve()}
-			})	
-		} catch(e) {
-			reject(e)
-		}
-    });
+	themeCompile(readAssetConfig(assetpath))
 }
 
 module.exports = {
