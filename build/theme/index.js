@@ -8,17 +8,38 @@ var path = require('path'),
 	config = require('../config'),
 	assetpath = config.build.assetConfigPath,
 	PrettyError = require('pretty-error'),
-    pe = new PrettyError();
+    pe = new PrettyError(),
+    loadJsonFile = require('load-json-file'),
+    writeJsonFile = require('write-json-file');
 
 function readAssetConfig(assetpath){
-	try {
-	  fs.statSync(assetpath)
-	  return require(assetpath)
+	try {	  
+	  return loadJsonFile.sync(assetpath);
 	} catch (e) {
 	 	throw new Error("Asset config File does not exist. \n" +
-	 	"Run theme:compile to generate the file");
+	 	"Run theme:webpack to generate the file  \n \n");
 	}
 }
+
+function updateJsonFile(
+  filePath /* : string */,
+  updater /* : Updater */,
+  options /* : any | void */
+) /* : Promise<void> */ {
+  return Promise.resolve()
+    .then(() => loadJsonFile(filePath))
+    .catch(err => {
+      if (options && options.defaultValue) {
+        if (typeof options.defaultValue === 'function') {
+          return options.defaultValue();
+        }
+        return options.defaultValue;
+      }
+      throw err;
+    })
+    .then(data => updater(data))
+    .then(data => writeJsonFile(filePath, data, options));
+};
 
 function genertareWebpackConfig(area, theme, configs, modulePaths) {
 	var baseWebpackConfig = require('../config/webpack.config');
@@ -48,36 +69,64 @@ function themeCompile(assetConfig) {
   	const areas = assetConfig.areas;
   	const handles = assetConfig.handles;
   	const modulePaths = assetConfig.modulePaths;
-  	const webpackCompilers = [];
+  	const webpackCompilers = {};
   	_.forOwn(areas, function(themes, area) {
   		_.forOwn(themes, function(assets, theme) {
   			const entries = _.zipObject(handles[area], _.map(handles[area]).map(function(val) {
   				return path.join(config.build.resourcePath,area,theme,'webpack', val+'.js');
   			}));
-  			webpackCompilers.push(webpack(genertareWebpackConfig(area, theme, entries, modulePaths)));
+  			webpackCompilers[area+'_'+theme] = webpack(genertareWebpackConfig(area, theme, entries, modulePaths));
   		});
   	});
 
-  	webpackCompilers.forEach(function(compiler) {
+  	_.forEach(webpackCompilers, function(compiler, areaTheme) {
   		compiler.run((err, stats) => {
 
-  		if (err) {
-  			var renderedError = pe.render(err)
-  			console.log(renderedError)
-  			process.exit();
-		    return
-		}
+	  		if (err) {
+	  			var renderedError = pe.render(err);
+	  			console.log(renderedError);
+	  			process.exit();
+			    return;
+			}
+			updateMetadata(stats, areaTheme);
+			process.stdout.write(stats.toString({
+			    colors: true,
+			    modules: false,
+			    children: false,
+			    chunks: false,
+			    chunkModules: false
+			}) + '\n\n');
+		});
+	});		
+}
 
-		process.stdout.write(stats.toString({
-		    colors: true,
-		    modules: false,
-		    children: false,
-		    chunks: false,
-		    chunkModules: false
-		  }) + '\n\n')
+function updateMetadata(stats, areaTheme) {
+	var c = stats.toJson();
+	var areaTheme = areaTheme.split('_');
+	var compiledAsset = {};
+	updateJsonFile(path.join(config.build.resourcePath,areaTheme[0],areaTheme[1], 'manifest.json'), function(data) { 		
+ 		return Object.assign({}, data, {compiledAsset:compiledAsset});
+ 	});
+	_.forEach(c.entrypoints, function(obj, handle) {
+		  compiledAsset[handle] = {
+		  	 js:[],
+		  	 css:[]
+		  };
+  		_.forEach(obj.assets, function(value) {
+  		 	if(/.js($|\?)/.test(value)) {
+ 				compiledAsset[handle]['js'].push(value);
+	 		} else if(/.css($|\?)/.test(value)) {
+	 			compiledAsset[handle]['css'].push(value);	
+	 		}
 		});
   	});
-}  	
+
+  	updateJsonFile(path.join(config.build.resourcePath,areaTheme[0],areaTheme[1], 'manifest.json'), function(data) { 		
+ 		return Object.assign({}, data, {compiledAsset:compiledAsset});
+ 	});
+
+  	
+}
 
 /**
  * Runs multiple webpack instances.

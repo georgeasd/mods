@@ -8,7 +8,7 @@ module.exports = {
 
   },
   output: {
-    filename: '[name].js'
+    filename: 'js/[name].js'
   },
   module: {
     rules: [
@@ -22,9 +22,18 @@ module.exports = {
                 use: [{
                     loader: "css-loader"
                 }, {
+                    loader: 'postcss-loader',
+                    options: {
+                      plugins: function () { 
+                        return [
+                          require('precss'),
+                          require('autoprefixer')
+                        ];
+                      }
+                    }
+                }, {
                     loader: "sass-loader"
                 }],
-                // use style-loader in development
                 fallback: "style-loader"
             })
       },
@@ -32,8 +41,12 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         loader: "file-loader",
         options: {
-          name: '[name].[ext]?[hash]'
+          name: 'fonts/[name].[ext]?[hash]'
         }
+      },
+      { 
+        test: /\.svg$/, 
+        loader: "svg-inline-loader" 
       }
     ]
   },
@@ -45,8 +58,11 @@ module.exports = {
   plugins: [
     new UglifyJSPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor' // Specify the common bundle's name.
+        name: 'vendor'
     }),
-    new ExtractTextPlugin("[name].css")
+    new ExtractTextPlugin({
+      filename:"css/[name].css",
+      allChunks: true
+    })
   ]
 };
