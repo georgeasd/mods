@@ -12,6 +12,8 @@ var path = require('path'),
     loadJsonFile = require('load-json-file'),
     writeJsonFile = require('write-json-file');
 
+global.__base = __dirname + '/../';    
+
 function readAssetConfig(assetpath){
 	try {	  
 	  return loadJsonFile.sync(assetpath);
@@ -21,11 +23,7 @@ function readAssetConfig(assetpath){
 	}
 }
 
-function updateJsonFile(
-  filePath /* : string */,
-  updater /* : Updater */,
-  options /* : any | void */
-) /* : Promise<void> */ {
+function updateJsonFile(filePath, updater, options){
   return Promise.resolve()
     .then(() => loadJsonFile(filePath))
     .catch(err => {
