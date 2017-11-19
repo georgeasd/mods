@@ -1,5 +1,4 @@
-var path = require('path'),
-	fs = require('fs'),
+const path = require('path'),
 	Promise = require('bluebird'),
 	webpack = require('webpack'),
 	merge = require('webpack-merge'),
