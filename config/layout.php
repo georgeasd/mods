@@ -6,5 +6,6 @@ return [
 	'cache' => [
 		'layout' => false
 	],
+	'show_template_hint' => false,
 	
 ];
