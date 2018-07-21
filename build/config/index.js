@@ -8,5 +8,6 @@ module.exports = {
 		resourcePath: path.join(__dirname, '../../resources/assets/'),
 		publicPath: path.join(__dirname, '../../public/assets/'),
 		assetConfigPath: path.join(__dirname, '../../resources/assets/config.json')
-	}
+	},
+	package: require(path.join(__dirname, '../../package.json')).mods
 }

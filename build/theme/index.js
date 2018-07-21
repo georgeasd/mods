@@ -54,11 +54,10 @@ function genertareWebpackConfig(area, theme, configs, modulePaths) {
 	    baseWebpackConfig = merge.smart(baseWebpackConfig, require(path));
 	});
 
-	baseWebpackConfig.resolve.alias.themePath = config.build.resourcePath+'/'+area+'/'+theme;
+	baseWebpackConfig.resolve.alias.themePath = path.join(config.build.resourcePath, area, theme);
 	baseWebpackConfig.entry = configs;
 	baseWebpackConfig.output.path = path.join(config.build.publicPath,area,theme);
 	baseWebpackConfig.output.publicPath = '/assets/'+area+'/'+theme+'/';
-
 	return baseWebpackConfig
 }
 
@@ -70,7 +69,7 @@ function themeCompile(assetConfig) {
   	_.forOwn(areas, function(themes, area) {
   		_.forOwn(themes, function(assets, theme) {
   			const entries = _.zipObject(handles[area], _.map(handles[area]).map(function(val) {
-  				return path.join(config.build.resourcePath,area,theme,'webpack', val+'.js');
+  				return ['@babel/polyfill', path.join(config.build.resourcePath,area,theme,'webpack', val+'.js')];
   			}));
   			webpackCompilers[area+'_'+theme] = webpack(genertareWebpackConfig(area, theme, entries, modulePaths));
   		});
@@ -133,6 +132,4 @@ function run() {
 	themeCompile(readAssetConfig(assetpath))
 }
 
-module.exports = {
-	run: run
-}
+module.exports = run;

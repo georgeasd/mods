@@ -1,3 +1,3 @@
-var run = require('./theme').run
+var run = require('./theme');
 
-run()
+run();
