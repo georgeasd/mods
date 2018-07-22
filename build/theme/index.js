@@ -9,7 +9,8 @@ const path = require('path'),
 	PrettyError = require('pretty-error'),
     pe = new PrettyError(),
     loadJsonFile = require('load-json-file'),
-    writeJsonFile = require('write-json-file');
+    writeJsonFile = require('write-json-file'),
+    argv = require('yargs').argv;
 
 global.__base = __dirname + '/../';    
 
@@ -71,11 +72,19 @@ function themeCompile(assetConfig) {
   			const entries = _.zipObject(handles[area], _.map(handles[area]).map(function(val) {
   				return ['@babel/polyfill', path.join(config.build.resourcePath,area,theme,'webpack', val+'.js')];
   			}));
-  			webpackCompilers[area+'_'+theme] = webpack(genertareWebpackConfig(area, theme, entries, modulePaths));
+  			webpackCompilers[area+'_'+theme] = genertareWebpackConfig(area, theme, entries, modulePaths);
   		});
   	});
 
-  	_.forEach(webpackCompilers, function(compiler, areaTheme) {
+  	_.forEach(webpackCompilers, function(config, areaTheme) {
+  		const [area, theme] = areaTheme.split('_');
+  		if(argv.area && argv.area != area) {
+  			return;
+  		}
+  		if(argv.theme && argv.theme != theme) {
+  			return;
+  		}
+  		const compiler = webpack(config);
   		compiler.run((err, stats) => {
 
 	  		if (err) {
@@ -120,8 +129,6 @@ function updateMetadata(stats, areaTheme) {
   	updateJsonFile(path.join(config.build.resourcePath,areaTheme[0],areaTheme[1], 'manifest.json'), function(data) { 		
  		return Object.assign({}, data, {compiledAsset:compiledAsset});
  	});
-
-  	
 }
 
 /**
