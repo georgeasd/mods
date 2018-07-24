@@ -4,19 +4,11 @@ const compact = require('lodash/compact');
 const devMode = process.env.NODE_ENV !== 'production';
 
 function getStyleLoaders(config) {
-	return [{
-		resourceQuery: /module/,
+	return [{		
+		resourceQuery: /nomodule/,
 		use: [
 	      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,	      
-	      {
-	        loader: 'css-loader',
-	        options: {
-	          // enable CSS modules
-	          modules: true,
-	          // customize generated class names
-	          localIdentName: '[local]_[hash:base64:8]'
-	        }
-	      },
+	      'css-loader',
 	      {
 	        loader: 'postcss-loader',
 	        options: {
@@ -30,10 +22,18 @@ function getStyleLoaders(config) {
 	      },
 	      'sass-loader'
 	    ]
-	}, {
+	}, {		
 		use: [
 	      devMode ? 'style-loader' : MiniCssExtractPlugin.loader,	      
-	      'css-loader',
+	      {
+	        loader: 'css-loader',
+	        options: {
+	          // enable CSS modules
+	          modules: true,
+	          // customize generated class names
+	          localIdentName: '[local]_[hash:base64:8]'
+	        }
+	      },
 	      {
 	        loader: 'postcss-loader',
 	        options: {
